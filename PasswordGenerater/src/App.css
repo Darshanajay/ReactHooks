@@ -1,0 +1,37 @@
+.cont{
+  width: 100%;
+  text-align: center;
+}
+.innercont{
+  width: 100%;
+  max-width: 550px;
+  background-color: antiquewhite;
+  position: absolute;
+  left: 30%;
+  top: 20%;
+  border: 2px solid black;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  
+}
+.inpu{
+  font-size: 25px;
+  width: 100%;
+  max-width: 440px;
+  border-radius: 10px 0px 0px 10px;
+  margin-top: 10px;
+}
+.but{
+  border-radius: 0px 10px 10px 0px;
+  background-color: blue;
+  color: white;
+  height: 40px;
+  margin-top: 10px;
+}
+.currect{
+
+  display: flex;
+  float: left;
+}
