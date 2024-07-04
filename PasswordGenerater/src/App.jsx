@@ -1,42 +1,79 @@
-import { useState, useCallback } from "react";
-import "./App.css";
+import { useState } from "react";
+
+import { InputBox } from "./components";
+import useCurrencyInfo from "./hooks/useCurrencyInfo";
 
 function App() {
-  const [length, setLength] = useState(8);
-  const [numAllowed, setNumAllowed] = useState(false);
-  const [charAllowed, setCharAllowed] = useState(false);
-  const [password, setPassword] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [from, setFrom] = useState("usd");
+  const [to, setTo] = useState("inr");
+  const [convertedAmount, setConvertedAmount] = useState(0);
 
-  const passwordGenereter = useCallback(() => {
-    let pass = "";
-    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
-    if (numAllowed) str += "0123456789";
-    if (charAllowed) str += "!@#$%^&*_-+={}[]`";
-
-    for (let i = 1; i <= str.length; i++) {
-      let char = Math.floor(Math.random() * str.length + 1);
-      pass = str.charAt(char);
-    }
-    setPassword(pass);
-  }, [length, numAllowed, charAllowed, setPassword]);
-
+  const currencyInfo = useCurrencyInfo(from);
+  const options = Object.keys(currencyInfo);
+  const swap = () => {
+    setFrom(to);
+    setTo(from);
+    setConvertedAmount(amount);
+    setAmount(convertedAmount);
+  };
+  const converte = () => {
+    setConvertedAmount(amount * currencyInfo[to]);
+  };
   return (
-    <>
-      <div className="cont">
-        <div className="innercont">
-          <input type="password" placeholder="Password" className="inpu" />
-          <button className="but">copy</button>
-
-          <input type="range" />
-          <p>Length:"12"</p>
-          <input type="checkbox" />
-          <p>Numbers</p>
-          <input type="checkbox" />
-          <p>Chracters</p>
+    <div
+      className="w-full h-screen flex flex-wrap justify-center items-center bg-cover bg-no-repeat"
+      style={{
+        backgroundImage: `url('https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')`,
+      }}
+    >
+      <div className="w-full">
+        <div className="w-full max-w-md mx-auto border border-gray-60 rounded-lg p-5 backdrop-blur-sm bg-white/30">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              converte();
+            }}
+          >
+            <div className="w-full mb-1">
+              <InputBox
+                label="From"
+                amount={amount}
+                currencyOptions={options}
+                onCurrencyChange={(currency) => setAmount(amount)}
+                selectCurrency={from}
+                onAmountChange={(amount) => setAmount(amount)}
+              />
+            </div>
+            <div className="relative w-full h-0.5">
+              <button
+                type="button"
+                className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 border-2 border-white rounded-md bg-blue-600 text-white px-2 py-0.5"
+                onClick={swap}
+              >
+                swap
+              </button>
+            </div>
+            <div className="w-full mt-1 mb-4">
+              <InputBox
+                label="To"
+                amount={convertedAmount}
+                currencyOptions={options}
+                onCurrencyChange={(currency) => setTo(currency)}
+                selectCurrency={from}
+                amountDisable
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg"
+            >
+              Convert {from.toUpperCase()} to {to.toUpperCase()}
+            </button>
+          </form>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
